@@ -1,18 +1,19 @@
+import { CheckCircle2 } from "lucide-react";
+
 const painPoints = [
   {
-    icon: "❌",
-    title: "Freelancer ngilang setelah dibayar DP",
-    desc: "Sudah bayar, progress tidak jelas, hasil tidak sesuai harapan.",
+    title:
+      "Sekarang Sudah Zaman AI, Mudahkan AI & Google Menemukan Usaha Anda",
+    desc: "Website yang rapi dan jelas membuat mesin pencari dan asisten AI lebih mudah memahami bisnis kamu, mulai dari alamat, jam buka, layanan, dan kontak yang tersaji di satu tempat dan bisa diindeks.",
   },
   {
-    icon: "❌",
-    title: "Nunggu 2–4 minggu tanpa kepastian",
-    desc: "Proses tertutup, kamu tidak tahu website seperti apa yang sedang dibuat.",
+    title:
+      "Semua Orang Pasti Cari Informasi Di Google Terlebih Dahulu, Pastikan Usaha Anda Ditemukan",
+    desc: "Calon pelanggan biasanya googling nama usaha, alamat, atau jenis produk dulu. Tanpa halaman resmi, kamu bisa kalah saing dari kompetitor yang sudah muncul di hasil pencarian.",
   },
   {
-    icon: "❌",
-    title: "Template pasaran yang semua bisnis pakai sama",
-    desc: "Tidak ada identitas, tidak ada diferensiasi, tidak memorable.",
+    title: "Customer Lebih Percaya Usaha Yang Punya Website",
+    desc: "Domain dan halaman profesional memberi kesan serius dan transparan, beda dengan akun sosmed saja yang terasa sementara. Kepercayaan awal sering mulai dari situ.",
   },
 ];
 
@@ -22,13 +23,14 @@ export default function PainPoint() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Headline */}
         <h2 className="text-4xl font-black text-center mb-4 leading-tight">
-          Masih nunggu website jadi{" "}
-          <span className="text-brand-turquoise">2 minggu?</span>
+          Masih Merasa Usahamu{" "}
+          <span className="text-brand-turquoise">Tidak Butuh Website?</span>
         </h2>
 
         {/* Subtext */}
         <p className="text-brand-muted text-center mb-12 text-lg">
-          Banyak UMKM stuck karena ini:
+          Ini tiga alasan kuat kenapa punya website masih relevan untuk usaha kamu
+          hari ini:
         </p>
 
         {/* Cards Grid */}
@@ -36,9 +38,15 @@ export default function PainPoint() {
           {painPoints.map((point, index) => (
             <div
               key={index}
-              className="bg-brand-dark rounded-2xl p-8 border border-red-500/20 hover:border-red-500/40 transition-colors duration-200"
+              className="bg-brand-dark rounded-2xl p-8 border border-green-500/20 hover:border-green-500/40 transition-colors duration-200"
             >
-              <div className="text-3xl mb-4">{point.icon}</div>
+              <div className="mb-4">
+                <CheckCircle2
+                  className="w-9 h-9 text-green-500"
+                  strokeWidth={2}
+                  aria-hidden
+                />
+              </div>
               <h3 className="font-bold text-lg text-white mb-2">
                 {point.title}
               </h3>

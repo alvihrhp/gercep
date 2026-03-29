@@ -34,7 +34,7 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <span className="font-black text-xl text-white tracking-tight">
+          <span className="font-black text-[30px] leading-none text-white tracking-tight">
             GERCEP
           </span>
           <span className="w-2 h-2 rounded-full bg-brand-turquoise inline-block ml-1 mb-3" />

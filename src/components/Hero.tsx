@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { WA_URL } from "@/lib/constants";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex items-center relative overflow-hidden bg-brand-dark pt-20">
+    <section className="relative overflow-hidden bg-brand-dark pt-20 lg:min-h-[85vh] flex flex-col">
       {/* Background radial gradient glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -15,11 +16,33 @@ export default function Hero() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 py-20 w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          {/* Left Column */}
+      <div className="relative max-w-7xl mx-auto px-6 py-12 lg:py-20 w-full flex-1 flex flex-col justify-center lg:min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 lg:items-stretch lg:min-h-[calc(85vh-11rem)] gap-8 w-full">
+          {/* Kolom kanan — foto (atas di mobile/tablet, kanan di desktop) */}
+          <div className="order-1 lg:order-2 relative w-full min-h-[220px] h-[40vh] max-h-[380px] sm:min-h-[260px] sm:h-[38vh] sm:max-h-[420px] lg:h-full lg:max-h-none lg:min-h-0 rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl">
+            <Image
+              src="/images/bg-hero.webp"
+              alt="Gercep — jasa website cepat untuk UMKM"
+              fill
+              priority
+              className="object-cover object-[center_30%] sm:object-[center_32%] lg:object-[center_38%]"
+              sizes="(max-width: 1023px) 100vw, 50vw"
+            />
+            {/* Gradient: mobile & tablet — fade ke bawah (blend ke bg teks) */}
+            <div
+              className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-brand-dark/25 to-brand-dark lg:hidden"
+              aria-hidden
+            />
+            {/* Gradient: desktop — fade dari kiri (warna bg site) */}
+            <div
+              className="absolute inset-0 pointer-events-none hidden lg:block bg-gradient-to-r from-brand-dark via-transparent to-transparent"
+              aria-hidden
+            />
+          </div>
+
+          {/* Kolom kiri — teks */}
           <motion.div
-            className="lg:w-3/5"
+            className="order-2 lg:order-1 flex flex-col justify-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -32,15 +55,14 @@ export default function Hero() {
 
             {/* H1 */}
             <h1 className="text-5xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
-              Website usaha kamu jadi{" "}
+              Co-Create Website Instantly{" "}
               <br className="hidden sm:block" />
-              <span className="text-brand-turquoise">hari ini.</span>
+              <span className="text-brand-turquoise">In 1 Hour</span>
             </h1>
 
             {/* Subtext */}
             <p className="text-brand-muted text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
-              Live bareng kamu. Pakai AI. Selesai dalam 1 jam — tanpa ribet,
-              tanpa nunggu berminggu-minggu.
+              Bikin Website Live Sessions Hanya 750 Ribu Dalam 1 Jam
             </p>
 
             {/* CTA Row */}
@@ -69,54 +91,6 @@ export default function Hero() {
               <span>Dipercaya 50+ usaha di Indonesia</span>
             </div>
           </motion.div>
-
-          {/* Right Column — Browser Mockup */}
-          <div className="lg:w-2/5 flex justify-center w-full">
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-full max-w-sm"
-            >
-              <div className="bg-brand-card rounded-2xl p-4 shadow-[0_0_60px_rgba(18,209,151,0.15)] w-full">
-                {/* Browser Chrome */}
-                <div className="flex gap-1.5 mb-3">
-                  <span className="w-3 h-3 rounded-full bg-red-500" />
-                  <span className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <span className="w-3 h-3 rounded-full bg-green-500" />
-                </div>
-
-                {/* URL Bar */}
-                <div className="bg-brand-dark rounded px-3 py-1 text-xs text-brand-muted text-center mb-4">
-                  gercep.id/usaha-kamu
-                </div>
-
-                {/* Fake Website Skeleton */}
-                <div className="space-y-3">
-                  {/* Hero skeleton */}
-                  <div className="bg-brand-turquoise/20 rounded-lg h-20 animate-pulse" />
-
-                  {/* Nav skeleton */}
-                  <div className="flex gap-2">
-                    <div className="bg-white/10 rounded h-3 w-16" />
-                    <div className="bg-white/10 rounded h-3 w-12" />
-                    <div className="bg-white/10 rounded h-3 w-14" />
-                  </div>
-
-                  {/* Text lines skeleton */}
-                  <div className="bg-white/10 rounded h-3 w-full" />
-                  <div className="bg-white/10 rounded h-3 w-4/5" />
-                  <div className="bg-white/10 rounded h-3 w-3/5" />
-
-                  {/* Button skeleton */}
-                  <div className="bg-brand-turquoise/40 rounded h-8 w-24" />
-                </div>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </div>
     </section>
