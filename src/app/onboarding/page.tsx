@@ -137,6 +137,8 @@ const MOOD_OPTIONS = [
   { id: "segar", label: "Segar & Natural", emoji: "🟢", colors: ["#16A34A", "#84CC16", "#F5F0E8"] },
 ];
 
+type PaketFeature = string | { title: string; subtext: string };
+
 const PAKET_OPTIONS = [
   {
     id: "xdeal",
@@ -145,7 +147,7 @@ const PAKET_OPTIONS = [
     name: "XDeal",
     price: "Rp 750.000",
     duration: "1 Jam Live Session",
-    features: ["1 landing page", "3 scroll sections", "Mobile-ready", "Deploy live hari ini", "Tombol CTA ke WhatsApp"],
+    features: ["1 landing page", "3 scroll sections", "Mobile-ready", "Deploy live hari ini", "Tombol CTA ke WhatsApp"] as PaketFeature[],
     featured: false,
   },
   {
@@ -155,7 +157,7 @@ const PAKET_OPTIONS = [
     name: "XQuick",
     price: "Rp 1.500.000",
     duration: "3 Hari Pengerjaan",
-    features: ["3–4 halaman website", "Mobile-ready", "SEO basic", "Meta tags lengkap", "Pendampingan setup domain"],
+    features: ["3–4 halaman website", "Mobile-ready", "SEO basic", "Meta tags lengkap", "Pendampingan setup domain"] as PaketFeature[],
     featured: false,
   },
   {
@@ -165,7 +167,7 @@ const PAKET_OPTIONS = [
     name: "Xpress",
     price: "Rp 3.000.000",
     duration: "Selesai 1 Hari",
-    features: ["4–5 halaman website", "Mobile-ready", "Copywriting dibantu AI", "Setup custom domain", "SEO on-page lengkap"],
+    features: ["4–5 halaman website", "Mobile-ready", "Copywriting dibantu AI", "Setup custom domain", "SEO on-page lengkap"] as PaketFeature[],
     featured: true,
   },
   {
@@ -175,7 +177,17 @@ const PAKET_OPTIONS = [
     name: "Xpriority",
     price: "Rp 5.000.000",
     duration: "1 Jam Live Premium",
-    features: ["Landing page premium", "Mobile-ready", "Revisi real-time saat sesi", "AI discoverability setup", "Priority booking slot"],
+    features: [
+      "4–5 halaman website",
+      "Mobile-ready",
+      "Revisi real-time saat sesi",
+      {
+        title: "AI discoverability setup",
+        subtext:
+          "Bisnis kamu dioptimasi agar muncul saat orang cari lewat ChatGPT, Perplexity, atau Google AI Overview — bukan cuma SEO biasa.",
+      },
+      "Priority booking slot",
+    ] as PaketFeature[],
     featured: false,
   },
 ];
@@ -1009,7 +1021,16 @@ function OnboardingInner() {
                         {p.features.map((f, i) => (
                           <li key={i} className="flex items-start gap-2 text-xs">
                             <CheckCircle2 size={13} className="flex-shrink-0 mt-0.5 text-green-400" />
-                            <span className="text-gray-300">{f}</span>
+                            <div>
+                              <span className="text-gray-300">
+                                {typeof f === "string" ? f : f.title}
+                              </span>
+                              {typeof f !== "string" && (
+                                <p className="text-gray-400 text-[11px] mt-1 leading-relaxed">
+                                  {f.subtext}
+                                </p>
+                              )}
+                            </div>
                           </li>
                         ))}
                       </ul>

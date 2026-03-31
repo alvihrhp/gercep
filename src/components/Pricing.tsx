@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
+type PackageFeature = string | { title: string; subtext: string };
+
 const packages = [
   {
     id: "xdeal",
@@ -15,7 +17,7 @@ const packages = [
       "Mobile-ready",
       "Deploy live hari ini",
       "Tombol CTA ke WhatsApp",
-    ],
+    ] as PackageFeature[],
     ctaLabel: "Pilih XDeal",
     highlighted: false,
   },
@@ -32,7 +34,7 @@ const packages = [
       "SEO basic",
       "Meta tags lengkap",
       "Pendampingan setup domain",
-    ],
+    ] as PackageFeature[],
     ctaLabel: "Pilih XQuick",
     highlighted: false,
   },
@@ -49,7 +51,7 @@ const packages = [
       "Copywriting dibantu AI",
       "Setup custom domain",
       "SEO on-page lengkap",
-    ],
+    ] as PackageFeature[],
     ctaLabel: "Pilih Xpress",
     highlighted: true,
   },
@@ -61,12 +63,16 @@ const packages = [
     price: "Rp 5.000.000",
     duration: "1 Jam Live Premium",
     features: [
-      "Landing page premium",
+      "4–5 halaman website",
       "Mobile-ready",
       "Revisi real-time saat sesi",
-      "AI discoverability setup",
+      {
+        title: "AI discoverability setup",
+        subtext:
+          "Bisnis kamu dioptimasi agar muncul saat orang cari lewat ChatGPT, Perplexity, atau Google AI Overview — bukan cuma SEO biasa.",
+      },
       "Priority booking slot",
-    ],
+    ] as PackageFeature[],
     ctaLabel: "Pilih Xpriority",
     highlighted: false,
   },
@@ -117,7 +123,16 @@ export default function Pricing() {
                       size={16}
                       className="text-brand-turquoise flex-shrink-0 mt-0.5"
                     />
-                    <span className="text-white/80">{feature}</span>
+                    <div>
+                      <span className="text-white/80">
+                        {typeof feature === "string" ? feature : feature.title}
+                      </span>
+                      {typeof feature !== "string" && (
+                        <p className="text-white/60 text-xs mt-1 leading-relaxed">
+                          {feature.subtext}
+                        </p>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -139,7 +154,7 @@ export default function Pricing() {
 
         {/* Footer Note */}
         <p className="text-center text-brand-muted text-sm mt-12">
-          ✓ Semua paket sudah termasuk mobile-ready &amp; deploy hari itu juga
+          ✓ Semua paket sudah termasuk mobile-ready
         </p>
       </div>
     </section>

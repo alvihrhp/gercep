@@ -4,12 +4,27 @@ import { JWT } from "google-auth-library";
 import { getGoogleServiceAccountCredentials, stripEnvQuotes } from "@/lib/server-env";
 import { sendWhatsApp } from "@/lib/fonnte";
 import { buildLeadNotification } from "@/lib/formatWAMessage";
+import { sendInvoiceWA } from "@/lib/send-invoice-wa";
 
 const PAKET_PRICES: Record<string, string> = {
   xdeal: "Rp 750.000",
   xquick: "Rp 1.500.000",
   xpress: "Rp 3.000.000",
   xpriority: "Rp 5.000.000",
+};
+
+const PAKET_LABELS: Record<string, string> = {
+  xdeal: "XDeal",
+  xquick: "XQuick",
+  xpress: "Xpress",
+  xpriority: "Xpriority",
+};
+
+const PAKET_TOTAL_NUMBERS: Record<string, number> = {
+  xdeal: 750000,
+  xquick: 1500000,
+  xpress: 3000000,
+  xpriority: 5000000,
 };
 
 function getOrdinalSuffix(day: number) {
@@ -41,6 +56,18 @@ function generateOrderNo() {
     randomPart += chars[Math.floor(Math.random() * chars.length)];
   }
   return `GERCEP-${randomPart}`;
+}
+
+function generateInvoiceId(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  let suffix = "";
+  for (let i = 0; i < 3; i++) {
+    suffix += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `GRCP-${y}${m}${d}-${suffix}`;
 }
 
 async function appendToSheet(data: Record<string, string>) {
@@ -119,6 +146,7 @@ export async function POST(req: NextRequest) {
     }
 
     const orderNo = generateOrderNo();
+    const invoiceId = generateInvoiceId();
 
     const data = {
       orderNo,
@@ -144,7 +172,21 @@ export async function POST(req: NextRequest) {
     await appendToSheet(data);
     await sendWANotif(data);
 
-    return NextResponse.json({ success: true, orderNo });
+    // Non-blocking: jangan gagalkan submit kalau pengiriman invoice WA ke klien gagal.
+    void sendInvoiceWA({
+      nama: data.nama,
+      whatsapp: data.whatsapp,
+      paket: PAKET_LABELS[data.paket] ?? data.paket,
+      harga: PAKET_TOTAL_NUMBERS[data.paket] ?? 0,
+      tanggal_sesi: "Menunggu konfirmasi jadwal",
+      invoice_id: invoiceId,
+    }).then((result) => {
+      if (!result.success) {
+        console.warn("[submit-form] Invoice WA gagal:", result.message);
+      }
+    });
+
+    return NextResponse.json({ success: true, orderNo, invoiceId });
   } catch (err: unknown) {
     console.error("[submit-form]", err);
     const msg = err instanceof Error ? err.message : "";

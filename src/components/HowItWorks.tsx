@@ -37,7 +37,7 @@ export default function HowItWorks() {
         </p>
 
         {/* Steps */}
-        <div className="relative flex flex-col md:flex-row items-start justify-between gap-8 mt-16">
+        <div className="relative flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-16">
           {/* Connecting line (desktop) */}
           <div className="absolute top-8 left-[16.66%] right-[16.66%] h-px bg-brand-turquoise/30 hidden md:block" />
 
@@ -46,7 +46,7 @@ export default function HowItWorks() {
             return (
               <div
                 key={index}
-                className="flex-1 flex flex-col items-center text-center"
+                className="w-full flex-1 flex flex-col items-center text-center"
               >
                 {/* Number Badge */}
                 <div className="w-16 h-16 rounded-full bg-brand-turquoise text-brand-dark font-black text-2xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(18,209,151,0.4)] relative z-10">
