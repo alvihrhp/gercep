@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, Suspense } from "react";
+import { useState, useRef, useCallback, Suspense, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, ChevronLeft, Loader2, X, Upload, Sparkles } from "lucide-react";
@@ -10,6 +10,7 @@ import { CheckCircle2, ChevronLeft, Loader2, X, Upload, Sparkles } from "lucide-
 interface FormData {
   nama: string;
   whatsapp: string;
+  email: string;
   namaUsaha: string;
   jenisUsaha: string;
   deskripsi: string;
@@ -208,13 +209,13 @@ function AIButton({
 function ProgressBar({ step, total }: { step: number; total: number }) {
   return (
     <div className="w-full mb-8">
-      <div className="flex justify-between text-xs text-gray-500 mb-2">
+      <div className="flex justify-between text-xs text-brand-muted mb-2">
         <span>Step {step} dari {total}</span>
         <span>{Math.round((step / total) * 100)}%</span>
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
         <div
-          className="h-full bg-green-600 rounded-full transition-all duration-500"
+          className="h-full bg-brand-turquoise rounded-full transition-all duration-500"
           style={{ width: `${(step / total) * 100}%` }}
         />
       </div>
@@ -224,7 +225,7 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
 
 function FormLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+    <label className="block text-sm font-semibold text-brand-muted mb-1.5">
       {children}
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
@@ -235,7 +236,7 @@ function Input({ ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition text-base ${props.className ?? ""}`}
+      className={`w-full border border-white/15 bg-brand-dark/60 rounded-xl px-4 py-3 text-white placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-turquoise focus:border-transparent transition text-base ${props.className ?? ""}`}
     />
   );
 }
@@ -249,10 +250,10 @@ function Textarea({ maxLength, value, onChange, ...props }: React.TextareaHTMLAt
         onChange={onChange}
         maxLength={maxLength}
         {...props}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition resize-none text-base"
+        className="w-full border border-white/15 bg-brand-dark/60 rounded-xl px-4 py-3 text-white placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-turquoise focus:border-transparent transition resize-none text-base"
       />
       {maxLength && (
-        <p className="text-xs text-gray-400 text-right mt-1">{len}/{maxLength}</p>
+        <p className="text-xs text-brand-muted text-right mt-1">{len}/{maxLength}</p>
       )}
     </div>
   );
@@ -273,6 +274,8 @@ function OnboardingInner() {
   const [submitting, setSubmitting] = useState(false);
   const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
   const [taglineOptions, setTaglineOptions] = useState<string[]>([]);
+  const [customColorInput, setCustomColorInput] = useState("");
+  const [customColors, setCustomColors] = useState<string[]>([]);
 
   // fotoSlots: per-foto state untuk upload on-pick
   const [fotoSlots, setFotoSlots] = useState<
@@ -290,6 +293,7 @@ function OnboardingInner() {
   const [formData, setFormData] = useState<FormData>({
     nama: "",
     whatsapp: "",
+    email: "",
     namaUsaha: "",
     jenisUsaha: "",
     deskripsi: "",
@@ -302,11 +306,18 @@ function OnboardingInner() {
     catatan: "",
     paket: initialPaket,
   });
+  const [jenisUsahaQuery, setJenisUsahaQuery] = useState("");
 
   const set = (key: keyof FormData, val: string | string[]) => {
     setFormData((prev) => ({ ...prev, [key]: val }));
     setErrors((prev) => ({ ...prev, [key]: "" }));
   };
+
+  const filteredJenisUsaha = useMemo(() => {
+    const q = jenisUsahaQuery.trim().toLowerCase();
+    if (!q) return JENIS_USAHA.slice(0, 12);
+    return JENIS_USAHA.filter((j) => j.toLowerCase().includes(q)).slice(0, 12);
+  }, [jenisUsahaQuery]);
 
   // ── Navigation ──────────────────────────────────────────────────────────────
 
@@ -315,6 +326,7 @@ function OnboardingInner() {
     if (step === 1) {
       if (!formData.nama.trim()) e.nama = "Nama wajib diisi";
       if (!formData.whatsapp.trim()) e.whatsapp = "Nomor WhatsApp wajib diisi";
+      if (!formData.email.trim()) e.email = "Email wajib diisi";
     }
     if (step === 2) {
       if (!formData.namaUsaha.trim()) e.namaUsaha = "Nama usaha wajib diisi";
@@ -322,7 +334,12 @@ function OnboardingInner() {
     }
     if (step === 3 && !formData.deskripsi.trim()) e.deskripsi = "Deskripsi wajib diisi";
     if (step === 4 && !formData.keunggulan.trim()) e.keunggulan = "Keunggulan wajib diisi";
-    if (step === 7 && !formData.warnaMood) e.warnaMood = "Pilih mood warna";
+    if (step === 7) {
+      if (!formData.warnaMood) e.warnaMood = "Pilih mood warna";
+      if (formData.warnaMood === "custom:" && customColors.length === 0) {
+        e.warnaMood = "Tambahkan minimal 1 warna untuk opsi custom";
+      }
+    }
     if (step === 10 && !formData.paket) e.paket = "Pilih paket terlebih dahulu";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -336,6 +353,26 @@ function OnboardingInner() {
       setStep((s) => s + 1);
       setAnimating(false);
     }, 220);
+  };
+
+  const syncCustomMood = (next: string[]) => {
+    setCustomColors(next);
+    set("warnaMood", next.length > 0 ? `custom: ${next.join(", ")}` : "custom:");
+  };
+
+  const addCustomColor = () => {
+    const color = customColorInput.trim();
+    if (!color || customColors.length >= 3 || customColors.includes(color)) return;
+    syncCustomMood([...customColors, color]);
+    setCustomColorInput("");
+  };
+
+  const formatColorLabel = (value: string) =>
+    value.replace(/\b\w/g, (char) => char.toUpperCase());
+
+  const removeCustomColor = (idx: number) => {
+    const next = customColors.filter((_, i) => i !== idx);
+    syncCustomMood(next);
   };
 
   const goBack = () => {
@@ -481,7 +518,16 @@ function OnboardingInner() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error ?? "Gagal mengirim form");
       // Store summary for thank you page
-      sessionStorage.setItem("gercep_onboarding", JSON.stringify({ nama: formData.nama, whatsapp: formData.whatsapp, paket: formData.paket }));
+      sessionStorage.setItem(
+        "gercep_onboarding",
+        JSON.stringify({
+          orderNo: data.orderNo ?? "",
+          nama: formData.nama,
+          whatsapp: formData.whatsapp,
+          email: formData.email,
+          paket: formData.paket,
+        })
+      );
       router.push("/onboarding/terima-kasih");
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : "Terjadi kesalahan, coba lagi.");
@@ -514,11 +560,17 @@ function OnboardingInner() {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
+    <main className="min-h-screen bg-brand-dark flex flex-col items-center py-10 px-4">
       {/* Logo */}
       <Link href="/" className="flex items-center mb-8">
-        <span className="font-black text-2xl tracking-tight text-gray-900">GERCEP</span>
-        <span className="w-2 h-2 rounded-full bg-green-600 inline-block ml-1 mb-3" />
+        <span className="font-black text-2xl tracking-tight text-white">GERCEP</span>
+        <span className="w-2 h-2 rounded-full bg-brand-turquoise inline-block ml-1 mb-3" />
+      </Link>
+      <Link
+        href="/"
+        className="text-brand-muted hover:text-brand-turquoise text-sm underline underline-offset-4 transition-colors mb-6"
+      >
+        ← Kembali ke beranda
       </Link>
 
       <div className="w-full max-w-xl">
@@ -526,7 +578,7 @@ function OnboardingInner() {
 
         {/* Form Card */}
         <div
-          className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-8 transition-all duration-200 ${slideClass}`}
+          className={`bg-brand-darker rounded-2xl shadow-xl border border-white/10 p-8 transition-all duration-200 [&_.text-gray-900]:text-white [&_.text-gray-800]:text-white [&_.text-gray-700]:text-brand-muted [&_.text-gray-600]:text-brand-muted [&_.text-gray-500]:text-brand-muted [&_.text-gray-400]:text-brand-muted ${slideClass}`}
         >
           {/* ── Step 1 ── */}
           {step === 1 && (
@@ -554,6 +606,16 @@ function OnboardingInner() {
                   />
                   {errors.whatsapp && <p className="text-red-500 text-xs mt-1">{errors.whatsapp}</p>}
                 </div>
+                <div>
+                  <FormLabel required>Email</FormLabel>
+                  <Input
+                    type="email"
+                    placeholder="contoh@email.com"
+                    value={formData.email}
+                    onChange={(e) => set("email", e.target.value)}
+                  />
+                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                </div>
               </div>
             </div>
           )}
@@ -576,14 +638,43 @@ function OnboardingInner() {
                 </div>
                 <div>
                   <FormLabel required>Jenis usaha</FormLabel>
-                  <select
-                    value={formData.jenisUsaha}
-                    onChange={(e) => set("jenisUsaha", e.target.value)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition text-base bg-white"
-                  >
-                    <option value="">Pilih jenis usaha…</option>
-                    {JENIS_USAHA.map((j) => <option key={j} value={j}>{j}</option>)}
-                  </select>
+                  <Input
+                    type="text"
+                    placeholder="Cari jenis usaha (contoh: travel, restoran, bengkel)..."
+                    value={jenisUsahaQuery}
+                    onChange={(e) => {
+                      setJenisUsahaQuery(e.target.value);
+                      set("jenisUsaha", "");
+                    }}
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Pilih salah satu hasil agar jenis usaha sesuai kategori Indonesia.
+                  </p>
+                  <div className="mt-2 border border-white/15 rounded-xl p-2 max-h-44 overflow-y-auto bg-brand-dark/60 [scrollbar-width:thin] [scrollbar-color:#12d197_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-brand-turquoise [&::-webkit-scrollbar-thumb]:rounded-full">
+                    {filteredJenisUsaha.length === 0 ? (
+                      <p className="text-sm text-brand-muted px-2 py-1">Tidak ada hasil. Coba kata kunci lain.</p>
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        {filteredJenisUsaha.map((j) => (
+                          <button
+                            key={j}
+                            type="button"
+                            onClick={() => {
+                              set("jenisUsaha", j);
+                              setJenisUsahaQuery(j);
+                            }}
+                            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                              formData.jenisUsaha === j
+                                ? "bg-brand-turquoise/15 border-brand-turquoise text-white"
+                                : "bg-transparent border-white/15 text-brand-muted hover:border-brand-turquoise/60 hover:text-white"
+                            }`}
+                          >
+                            {j}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   {errors.jenisUsaha && <p className="text-red-500 text-xs mt-1">{errors.jenisUsaha}</p>}
                 </div>
               </div>
@@ -721,7 +812,7 @@ function OnboardingInner() {
                     onClick={() => set("warnaMood", m.id)}
                     className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
                       formData.warnaMood === m.id
-                        ? "border-green-600 bg-green-50"
+                        ? "border-brand-turquoise shadow-[0_0_0_3px_rgba(18,209,151,0.16)]"
                         : "border-gray-200 hover:border-green-300"
                     }`}
                   >
@@ -738,7 +829,88 @@ function OnboardingInner() {
                     )}
                   </button>
                 ))}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!formData.warnaMood.startsWith("custom:")) {
+                      set("warnaMood", customColors.length > 0 ? `custom: ${customColors.join(", ")}` : "custom:");
+                    }
+                  }}
+                  className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+                    formData.warnaMood.startsWith("custom:")
+                      ? "border-brand-turquoise shadow-[0_0_0_3px_rgba(18,209,151,0.16)]"
+                      : "border-gray-200 hover:border-green-300"
+                  }`}
+                >
+                  <div className="flex gap-1.5 flex-shrink-0">
+                    {(customColors.length > 0 ? customColors : ["#22C55E", "#0EA5E9", "#F59E0B"]).slice(0, 3).map((c, i) => (
+                      <span key={i} className="w-5 h-5 rounded-full border border-white shadow-sm" style={{ background: c }} />
+                    ))}
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-semibold text-gray-800">🎨 Custom (pilih warna sendiri)</span>
+                  </div>
+                  {formData.warnaMood.startsWith("custom:") && (
+                    <CheckCircle2 size={18} className="text-green-600 flex-shrink-0" />
+                  )}
+                </button>
               </div>
+              {formData.warnaMood.startsWith("custom:") && (
+                <div className="mt-4 rounded-xl border-2 border-gray-200 p-4 space-y-3">
+                  <p className="text-sm text-white">
+                    Tambahkan maksimal 3 warna (boleh kode hex atau nama warna).
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Contoh: #FFFFFF atau white"
+                      value={customColorInput}
+                      onChange={(e) => setCustomColorInput(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={addCustomColor}
+                      disabled={!customColorInput.trim() || customColors.length >= 3}
+                      className="w-full px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Tambah warna
+                    </button>
+                  </div>
+                  <p className="text-xs text-white">
+                    Belum tahu kodenya? Cek di{" "}
+                    <a
+                      href="https://htmlcolorcodes.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-brand-turquoise underline underline-offset-2"
+                    >
+                      color picker
+                    </a>
+                    .
+                  </p>
+                  {customColors.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {customColors.map((color, i) => (
+                        <div key={`${color}-${i}`} className="inline-flex items-center gap-2 rounded-full border border-green-300 bg-transparent px-3 py-1.5 text-sm">
+                          <span className="w-4 h-4 rounded-full border border-gray-200" style={{ background: color }} />
+                          <span style={{ color: "#FFFFFF" }}>
+                            {formatColorLabel(color)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeCustomColor(i)}
+                            className="text-gray-400 hover:text-red-500"
+                            aria-label={`Hapus warna ${color}`}
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {errors.warnaMood && <p className="text-red-500 text-xs mt-2">{errors.warnaMood}</p>}
             </div>
           )}
@@ -824,27 +996,25 @@ function OnboardingInner() {
                       key={p.id}
                       type="button"
                       onClick={() => set("paket", p.id)}
-                      className={`text-left rounded-2xl border-2 p-5 transition-all flex flex-col ${
-                        p.featured && !selected
-                          ? "border-green-500 bg-gray-900"
-                          : selected
-                          ? "border-green-600 bg-green-50"
-                          : "border-gray-200 bg-white hover:border-green-300"
-                      } ${p.featured ? "text-white" : "text-gray-900"}`}
+                      className={`text-left rounded-2xl border-2 p-5 transition-all flex flex-col bg-gray-900 text-white ${
+                        selected
+                          ? "border-brand-turquoise shadow-[0_0_0_3px_rgba(18,209,151,0.16)]"
+                          : "border-green-500 hover:border-brand-turquoise/80"
+                      }`}
                     >
                       <span className={`text-xs rounded-full px-2.5 py-0.5 w-fit mb-3 ${p.badgeClass}`}>{p.badge}</span>
-                      <p className={`text-2xl font-black mb-0.5 ${p.featured && !selected ? "text-white" : "text-gray-900"}`}>{p.price}</p>
-                      <p className={`text-xs mb-4 ${p.featured && !selected ? "text-gray-400" : "text-gray-500"}`}>{p.duration}</p>
+                      <p className="text-2xl font-black mb-0.5 text-white">{p.price}</p>
+                      <p className="text-xs mb-4 text-gray-400">{p.duration}</p>
                       <ul className="flex flex-col gap-1.5 flex-1">
                         {p.features.map((f, i) => (
                           <li key={i} className="flex items-start gap-2 text-xs">
-                            <CheckCircle2 size={13} className={`flex-shrink-0 mt-0.5 ${p.featured && !selected ? "text-green-400" : "text-green-600"}`} />
-                            <span className={p.featured && !selected ? "text-gray-300" : "text-gray-600"}>{f}</span>
+                            <CheckCircle2 size={13} className="flex-shrink-0 mt-0.5 text-green-400" />
+                            <span className="text-gray-300">{f}</span>
                           </li>
                         ))}
                       </ul>
                       {selected && (
-                        <div className="mt-3 flex items-center gap-1.5 text-green-700 text-xs font-semibold">
+                        <div className="mt-3 flex items-center gap-1.5 text-green-400 text-xs font-semibold">
                           <CheckCircle2 size={14} /> Dipilih
                         </div>
                       )}
@@ -862,7 +1032,7 @@ function OnboardingInner() {
               <button
                 type="button"
                 onClick={goBack}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-800 font-medium text-sm transition-colors"
+                className="flex items-center gap-2 text-brand-muted hover:text-white font-medium text-sm transition-colors"
               >
                 <ChevronLeft size={16} /> Kembali
               </button>
@@ -871,7 +1041,7 @@ function OnboardingInner() {
             <div className="flex items-center gap-3">
               {/* Skip buttons for optional steps */}
               {(step === 5 || step === 6 || step === 9) && (
-                <button type="button" onClick={goNext} className="text-gray-400 hover:text-gray-600 text-sm underline underline-offset-4 transition-colors">
+                <button type="button" onClick={goNext} className="text-brand-muted hover:text-brand-turquoise text-sm underline underline-offset-4 transition-colors">
                   {step === 5 && "Lewati, upload nanti"}
                   {step === 6 && "Belum punya logo, skip dulu"}
                   {step === 9 && "Skip"}
@@ -883,7 +1053,7 @@ function OnboardingInner() {
                   type="button"
                   onClick={goNext}
                   disabled={fotoSlots.some((s) => s.loading) || logoLoading}
-                  className="bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
+                  className="bg-brand-turquoise hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-brand-dark font-bold px-6 py-3 rounded-xl transition-colors text-sm"
                 >
                   {(fotoSlots.some((s) => s.loading) || logoLoading) ? <Loader2 size={16} className="animate-spin inline" /> : "Lanjut →"}
                 </button>
@@ -892,7 +1062,7 @@ function OnboardingInner() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
+                  className="flex items-center gap-2 bg-brand-turquoise hover:opacity-90 disabled:opacity-60 text-brand-dark font-bold px-6 py-3 rounded-xl transition-colors text-sm"
                 >
                   {submitting && <Loader2 size={16} className="animate-spin" />}
                   {submitting ? "Mengirim…" : "Kirim Brief Sekarang →"}
@@ -907,7 +1077,7 @@ function OnboardingInner() {
         </div>
 
         {/* Footer note */}
-        <p className="text-center text-gray-400 text-xs mt-6">
+        <p className="text-center text-brand-muted text-xs mt-6">
           Data kamu aman dan hanya digunakan untuk keperluan pembuatan website. 🔒
         </p>
       </div>
@@ -918,8 +1088,8 @@ function OnboardingInner() {
 export default function OnboardingPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin" />
+      <main className="min-h-screen bg-brand-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-brand-turquoise border-t-transparent rounded-full animate-spin" />
       </main>
     }>
       <OnboardingInner />

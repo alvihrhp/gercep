@@ -47,11 +47,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* Badge */}
-            <div className="border border-brand-turquoise text-brand-turquoise text-xs rounded-full px-4 py-1.5 inline-flex gap-2 items-center mb-6 w-fit">
-              <span>⚡</span>
-              <span>Live · AI-Powered · 1 Jam Jadi</span>
-            </div>
+            <p className="text-brand-muted text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
+              Website bisnis kamu siap online hari ini — tanpa ribet, mulai 750 ribu.
+            </p>
 
             {/* H1 */}
             <h1 className="text-5xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
@@ -59,11 +57,6 @@ export default function Hero() {
               <br className="hidden sm:block" />
               <span className="text-brand-turquoise">In 1 Hour</span>
             </h1>
-
-            {/* Subtext */}
-            <p className="text-brand-muted text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
-              Bikin Website Live Sessions Hanya 750 Ribu Dalam 1 Jam
-            </p>
 
             {/* CTA Row */}
             <div className="flex gap-4 flex-wrap items-center mb-8">

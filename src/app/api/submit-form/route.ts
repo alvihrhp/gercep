@@ -12,6 +12,37 @@ const PAKET_PRICES: Record<string, string> = {
   xpriority: "Rp 5.000.000",
 };
 
+function getOrdinalSuffix(day: number) {
+  if (day > 3 && day < 21) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+function formatOrderTimestamp(date = new Date()) {
+  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return `${weekday}, ${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+}
+
+function generateOrderNo() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let randomPart = "";
+  for (let i = 0; i < 6; i++) {
+    randomPart += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `GERCEP-${randomPart}`;
+}
+
 async function appendToSheet(data: Record<string, string>) {
   const { clientEmail, privateKey } = getGoogleServiceAccountCredentials();
 
@@ -29,9 +60,11 @@ async function appendToSheet(data: Record<string, string>) {
   const sheet = doc.sheetsByIndex[0];
 
   await sheet.addRow({
-    Timestamp: new Date().toISOString(),
+    Timestamp: formatOrderTimestamp(),
+    "No Order": data.orderNo,
     Nama: data.nama,
     WhatsApp: data.whatsapp,
+    Email: data.email,
     "Nama Usaha": data.namaUsaha,
     "Jenis Usaha": data.jenisUsaha,
     Deskripsi: data.deskripsi,
@@ -58,8 +91,10 @@ async function sendWANotif(data: Record<string, string>) {
   }
 
   const message = buildLeadNotification({
+    orderNo: data.orderNo,
     nama: data.nama,
     whatsapp: data.whatsapp,
+    email: data.email,
     namaUsaha: data.namaUsaha,
     jenisUsaha: data.jenisUsaha,
     paket: data.paket,
@@ -76,16 +111,20 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const required = ["nama", "whatsapp", "namaUsaha", "jenisUsaha", "deskripsi", "keunggulan", "paket"];
+    const required = ["nama", "whatsapp", "email", "namaUsaha", "jenisUsaha", "deskripsi", "keunggulan", "paket"];
     for (const field of required) {
       if (!body[field]?.toString().trim()) {
         return NextResponse.json({ success: false, error: `Field ${field} wajib diisi` }, { status: 400 });
       }
     }
 
+    const orderNo = generateOrderNo();
+
     const data = {
+      orderNo,
       nama: body.nama,
       whatsapp: body.whatsapp,
+      email: body.email,
       namaUsaha: body.namaUsaha,
       jenisUsaha: body.jenisUsaha,
       deskripsi: body.deskripsi,
@@ -105,7 +144,7 @@ export async function POST(req: NextRequest) {
     await appendToSheet(data);
     await sendWANotif(data);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, orderNo });
   } catch (err: unknown) {
     console.error("[submit-form]", err);
     const msg = err instanceof Error ? err.message : "";

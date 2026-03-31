@@ -13,15 +13,19 @@ const PAKET_PRICES: Record<string, string> = {
 };
 
 export function buildLeadNotification({
+  orderNo,
   nama,
   whatsapp,
+  email,
   namaUsaha,
   jenisUsaha,
   paket,
   warnaMood,
 }: {
+  orderNo: string;
   nama: string;
   whatsapp: string;
+  email: string;
   namaUsaha: string;
   jenisUsaha: string;
   paket: string;
@@ -33,7 +37,9 @@ export function buildLeadNotification({
   return `🔔 *Lead Baru Gercep!*
 
 👤 *Nama:* ${nama}
+🧾 *No. Order:* ${orderNo || "-"}
 📱 *WA:* ${whatsapp}
+📧 *Email:* ${email || "-"}
 🏪 *Usaha:* ${namaUsaha} (${jenisUsaha})
 💰 *Paket:* ${paketLabel} — ${harga}
 🎨 *Mood:* ${warnaMood || "-"}
