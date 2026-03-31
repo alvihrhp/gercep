@@ -76,11 +76,6 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* Social Proof */}
-            <div className="flex items-center gap-2 text-sm text-brand-muted">
-              <span>⭐⭐⭐⭐⭐</span>
-              <span>Dipercaya 50+ usaha di Indonesia</span>
-            </div>
           </motion.div>
         </div>
       </div>

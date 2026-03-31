@@ -20,6 +20,7 @@ export default function Navbar() {
     { href: "#cara-kerja", label: "Cara Kerja" },
     { href: "#paket", label: "Paket" },
     { href: "#testimoni", label: "Testimoni" },
+    { href: "#portfolio", label: "Portofolio" },
   ];
 
   return (

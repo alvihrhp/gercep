@@ -3,17 +3,17 @@ import { Star } from "lucide-react";
 const testimonials = [
   {
     quote:
-      "Gak nyangka website toko saya bisa jadi dalam 1 jam. Langsung saya share ke pelanggan!",
-    name: "Budi S.",
-    business: "Toko Sembako, Tangerang",
-    initial: "B",
+      "Website kami jadi lebih profesional dan mewakili standar DMC internasional. Prosesnya cepat, jelas, dan hasilnya langsung bisa dipakai untuk klien global.",
+    name: "Arya Vasco",
+    business: "Asialink Holidays, Indonesia, Vietnam, Thailand",
+    initial: "A",
   },
   {
     quote:
-      "Prosesnya transparan banget, saya lihat langsung dibikinnya. Hasilnya melebihi ekspektasi.",
-    name: "Sari W.",
-    business: "Jasa Catering, Jakarta",
-    initial: "S",
+      "Website company profile kami sekarang terlihat jauh lebih kredibel untuk kebutuhan presentasi ke klien dan partner. Pengerjaannya cepat dan komunikasinya enak.",
+    name: "Difa Putra Ramadhan",
+    business: "PT. Indomedia Outdoor, Jakarta",
+    initial: "D",
   },
   {
     quote:
