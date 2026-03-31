@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { WA_URL } from "@/lib/constants";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -55,14 +54,12 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center">
-          <a
-            href={WA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/onboarding"
             className="bg-brand-turquoise text-brand-dark font-semibold px-5 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
           >
             Mulai Sekarang
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -89,15 +86,13 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <a
-              href={WA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/onboarding"
               className="bg-brand-turquoise text-brand-dark font-semibold px-5 py-3 rounded-lg hover:opacity-90 transition-opacity duration-200 text-center mt-2"
               onClick={() => setIsOpen(false)}
             >
               Mulai Sekarang
-            </a>
+            </Link>
           </div>
         </div>
       )}

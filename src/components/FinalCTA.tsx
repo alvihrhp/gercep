@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { WA_URL } from "@/lib/constants";
 
 export default function FinalCTA() {
@@ -18,14 +19,12 @@ export default function FinalCTA() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href={WA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/onboarding"
             className="bg-brand-dark text-white font-bold px-10 py-4 rounded-xl text-lg hover:opacity-90 transition-opacity duration-200"
           >
             Gas Sekarang →
-          </a>
+          </Link>
           <a
             href={WA_URL}
             target="_blank"

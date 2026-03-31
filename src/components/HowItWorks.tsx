@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ClipboardList, Video, Globe } from "lucide-react";
 
 const steps = [
@@ -64,6 +65,14 @@ export default function HowItWorks() {
                 <p className="text-brand-muted text-sm max-w-xs leading-relaxed">
                   {step.desc}
                 </p>
+                {index === 0 && (
+                  <Link
+                    href="/onboarding"
+                    className="text-brand-turquoise text-sm underline underline-offset-4 mt-2 inline-block"
+                  >
+                    Isi form sekarang →
+                  </Link>
+                )}
               </div>
             );
           })}

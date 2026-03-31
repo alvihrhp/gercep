@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { WA_URL } from "@/lib/constants";
 
 export default function Hero() {
   return (
@@ -48,7 +48,7 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* Badge */}
-            <div className="border border-brand-turquoise text-brand-turquoise text-xs rounded-full px-4 py-1.5 inline-flex gap-2 items-center mb-6">
+            <div className="border border-brand-turquoise text-brand-turquoise text-xs rounded-full px-4 py-1.5 inline-flex gap-2 items-center mb-6 w-fit">
               <span>⚡</span>
               <span>Live · AI-Powered · 1 Jam Jadi</span>
             </div>
@@ -67,16 +67,14 @@ export default function Hero() {
 
             {/* CTA Row */}
             <div className="flex gap-4 flex-wrap items-center mb-8">
-              <motion.a
-                href={WA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-turquoise text-brand-dark font-bold px-8 py-4 rounded-xl text-lg hover:opacity-90 transition-opacity"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Gas Sekarang →
-              </motion.a>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  href="/onboarding"
+                  className="bg-brand-turquoise text-brand-dark font-bold px-8 py-4 rounded-xl text-lg hover:opacity-90 transition-opacity inline-block"
+                >
+                  Gas Sekarang →
+                </Link>
+              </motion.div>
               <a
                 href="#cara-kerja"
                 className="text-brand-muted hover:text-white underline underline-offset-4 transition-colors duration-200 text-sm"

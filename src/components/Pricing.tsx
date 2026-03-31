@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { WA_URL } from "@/lib/constants";
 
 const packages = [
   {
     id: "xdeal",
+    href: "/onboarding?paket=xdeal",
     badge: "Paling Terjangkau",
     badgeClass: "text-brand-turquoise bg-brand-turquoise/10",
     price: "Rp 750.000",
@@ -20,6 +21,7 @@ const packages = [
   },
   {
     id: "xquick",
+    href: "/onboarding?paket=xquick",
     badge: "Cepat & Hemat",
     badgeClass: "text-brand-muted bg-white/5",
     price: "Rp 1.500.000",
@@ -36,6 +38,7 @@ const packages = [
   },
   {
     id: "xpress",
+    href: "/onboarding?paket=xpress",
     badge: "🔥 Terlaris",
     badgeClass: "bg-brand-turquoise text-brand-dark font-bold",
     price: "Rp 3.000.000",
@@ -52,6 +55,7 @@ const packages = [
   },
   {
     id: "xpriority",
+    href: "/onboarding?paket=xpriority",
     badge: "Premium",
     badgeClass: "text-brand-muted bg-white/5",
     price: "Rp 5.000.000",
@@ -119,10 +123,8 @@ export default function Pricing() {
               </ul>
 
               {/* CTA Button */}
-              <a
-                href={WA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={pkg.href}
                 className={`mt-auto text-center font-semibold py-3 rounded-xl w-full transition-all duration-200 ${
                   pkg.highlighted
                     ? "bg-brand-turquoise text-brand-dark hover:opacity-90"
@@ -130,7 +132,7 @@ export default function Pricing() {
                 }`}
               >
                 {pkg.ctaLabel}
-              </a>
+              </Link>
             </div>
           ))}
         </div>

@@ -1,5 +1,10 @@
 import { MessageCircle } from "lucide-react";
-import { WA_URL } from "@/lib/constants";
+import {
+  INSTAGRAM_URL,
+  TIKTOK_URL,
+  WA_NUMBER,
+  WA_URL,
+} from "@/lib/constants";
 
 const navLinks = [
   { href: "#cara-kerja", label: "Cara Kerja" },
@@ -81,7 +86,7 @@ export default function Footer() {
             <h3 className="font-semibold text-white mb-4">Hubungi Kami</h3>
             <div className="flex gap-4 mb-4">
               <a
-                href="https://instagram.com/gercep.id"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -90,7 +95,7 @@ export default function Footer() {
                 <InstagramIcon />
               </a>
               <a
-                href="https://tiktok.com/@gercep.id"
+                href={TIKTOK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"
@@ -117,7 +122,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-brand-turquoise text-sm hover:underline"
             >
-              wa.me/gercep
+              wa.me/{WA_NUMBER}
             </a>
           </div>
         </div>

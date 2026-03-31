@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import {
+  INSTAGRAM_URL,
+  SITE_URL,
+  TIKTOK_URL,
+  WA_TELEPHONE_E164,
+} from "@/lib/constants";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gercep.id"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Gercep — Website Usaha Kamu Jadi Hari Ini",
     template: "%s | Gercep",
@@ -20,12 +26,12 @@ export const metadata: Metadata = {
     "website UMKM profesional",
     "gercep website",
   ],
-  authors: [{ name: "Gercep", url: "https://gercep.id" }],
+  authors: [{ name: "Gercep", url: SITE_URL }],
   creator: "Gercep",
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://gercep.id",
+    url: SITE_URL,
     siteName: "Gercep",
     title: "Gercep — Website Usaha Kamu Jadi Hari Ini",
     description: "Live bareng kamu. Pakai AI. Selesai dalam 1 jam.",
@@ -56,7 +62,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://gercep.id",
+    canonical: SITE_URL,
   },
   verification: {
     google: "REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN",
@@ -68,8 +74,8 @@ const structuredData = {
   "@type": "LocalBusiness",
   name: "Gercep",
   description: "Jasa bikin website cepat untuk UMKM Indonesia",
-  url: "https://gercep.id",
-  telephone: "+628XXXXXXXXXX",
+  url: SITE_URL,
+  telephone: WA_TELEPHONE_E164,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Tangerang Selatan",
@@ -78,10 +84,7 @@ const structuredData = {
   },
   priceRange: "Rp750.000 - Rp5.000.000",
   openingHours: "Mo-Su 09:00-21:00",
-  sameAs: [
-    "https://instagram.com/gercep.id",
-    "https://tiktok.com/@gercep.id",
-  ],
+  sameAs: [INSTAGRAM_URL, TIKTOK_URL],
 };
 
 export default function RootLayout({
