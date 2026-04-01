@@ -48,7 +48,11 @@ export const WA_TELEPHONE_E164 = `+${WA_NUMBER}`;
 
 export const INSTAGRAM_URL =
   stripEnvQuotes(process.env.NEXT_PUBLIC_INSTAGRAM_URL) ||
-  "https://instagram.com/gercep.id";
+  "https://www.instagram.com/gercep.web/";
+
+export const FACEBOOK_URL =
+  stripEnvQuotes(process.env.NEXT_PUBLIC_FACEBOOK_URL) ||
+  "https://web.facebook.com/profile.php?id=61577548363944&sk=directory_contact_info&fb_profile_edit_entry_point=%7B%22feature%22%3A%22profile_directory%22%2C%22click_point%22%3A%22pencil_edit_directory_section%22%2C%22additional_metadata%22%3A%7B%22section_type%22%3A%22contact_info%22%7D%7D";
 
 export const TIKTOK_URL =
   stripEnvQuotes(process.env.NEXT_PUBLIC_TIKTOK_URL) ||

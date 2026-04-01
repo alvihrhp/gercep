@@ -7,6 +7,7 @@ const testimonials = [
     name: "Arya Vasco",
     business: "Asialink Holidays, Indonesia, Vietnam, Thailand",
     initial: "A",
+    avatar: "/images/portfolio/vasco.jpg",
   },
   {
     quote:
@@ -14,13 +15,15 @@ const testimonials = [
     name: "Difa Putra Ramadhan",
     business: "PT. Indomedia Outdoor, Jakarta",
     initial: "D",
+    avatar: "/images/portfolio/putra.png",
   },
   {
     quote:
-      "Akhirnya punya website sendiri, gak cuma andalkan Instagram doang.",
-    name: "Reza M.",
-    business: "Barbershop, Bekasi",
-    initial: "R",
+      "Website kami sekarang lebih kuat merepresentasikan identitas perusahaan di sektor defence. Tampilan lebih profesional dan memudahkan komunikasi ke partner strategis.",
+    name: "Asuryo",
+    business: "PT. Jatik Cakra Nanggala",
+    initial: "A",
+    avatar: "/images/portfolio/asuryo.png",
   },
 ];
 
@@ -60,7 +63,16 @@ export default function Testimonials() {
               {/* Author */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-brand-turquoise/20 flex items-center justify-center text-brand-turquoise font-bold text-sm flex-shrink-0">
-                  {t.initial}
+                  {t.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={t.avatar}
+                      alt={t.name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    t.initial
+                  )}
                 </div>
                 <div>
                   <p className="font-semibold text-white text-sm">{t.name}</p>

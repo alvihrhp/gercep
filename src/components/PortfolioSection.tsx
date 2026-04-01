@@ -21,6 +21,13 @@ const portfolioItems: PortfolioItem[] = [
     url: "https://indomedia.co.id",
     screenshotUrl: "/images/portfolio/indomedia.png",
   },
+  {
+    name: "Jatik",
+    category: "Defence",
+    description: "Company Profile — Solusi defence, security, dan intelligence technologies",
+    url: "https://jatik.id",
+    screenshotUrl: "/images/portfolio/jatik.png",
+  },
 ];
 
 function PortfolioCard({
@@ -82,7 +89,7 @@ export default function PortfolioSection() {
             Hasil Nyata
           </p>
           <h2 className="text-4xl font-black leading-tight text-white">
-            Ini contoh website yang bisa kamu punya.
+            Ini beberapa klien yang sudah jalan bareng kami.
           </h2>
           <p className="text-brand-muted mt-2 text-base">
             Dibangun langsung bersama klien, selesai dalam waktu singkat.
