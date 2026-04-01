@@ -12,6 +12,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/images/favicon.ico",
+    shortcut: "/images/favicon.ico",
+    apple: "/images/favicon.ico",
+  },
   title: {
     default: "Gercep — Website Usaha Kamu Jadi Hari Ini",
     template: "%s | Gercep",
